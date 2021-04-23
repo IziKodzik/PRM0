@@ -7,23 +7,32 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.v2.databinding.ActivityMainBinding
-import com.example.v2.databinding.ListLayoutBinding
+import com.example.v2.databinding.ListItemBinding
 
-class CustomAdapter(private val transferList: ArrayList<Transfer>) : RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
 
-    class ViewHolder(private val binding: ListLayoutBinding):RecyclerView.ViewHolder(binding.root){
-        fun bind(transfer: Transfer){
-            binding.textViewTarget.text = transfer.target
-            binding.textViewValue.text = transfer.value.toString()
-            if(transfer.value >=0)
-                binding.textViewValue.setTextColor(Color.GREEN)
+class ViewHolder(private val binding: ListItemBinding):RecyclerView.ViewHolder(binding.root){
+    fun bind(transfer: Transfer){
+        with(binding){
+            textViewTarget.text = transfer.target
+            textViewValue.text = transfer.amount.toString()
+            if(transfer.amount >=0)
+                textViewValue.setTextColor(Color.GREEN)
             else
-                binding.textViewValue.setTextColor(Color.RED)
+                textViewValue.setTextColor(Color.RED)
+            textViewDate.text = transfer.date.toString()
+            textViewCategory.text = transfer.category
+
         }
+
     }
+}
+
+class CustomAdapter() : RecyclerView.Adapter<ViewHolder>() {
+
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ListLayoutBinding.inflate(
+        val binding = ListItemBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
@@ -33,9 +42,13 @@ class CustomAdapter(private val transferList: ArrayList<Transfer>) : RecyclerVie
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(transferList[position])
+        holder.bind(Shared.transferList[position])
     }
 
-    override fun getItemCount(): Int = transferList.size
+    override fun getItemCount(): Int = Shared.transferList.size
+
+    fun refresh(){
+        notifyDataSetChanged()
+    }
 
 }
