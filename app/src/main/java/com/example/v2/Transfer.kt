@@ -1,13 +1,11 @@
 package com.example.v2
 
-import android.text.Editable
 import java.io.Serializable
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.*
+import java.time.LocalDate
 
-data class Transfer(var amount: Double,var date: Date,var target: String, var category: String,
-                    var incoming: Boolean) : Serializable{
+data class Transfer(
+    var amount: Double, var date: LocalDate, var target: String, var category: String,
+    var incoming: Boolean) : Serializable{
 
     init{
         if(!incoming)

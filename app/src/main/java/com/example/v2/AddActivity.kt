@@ -2,13 +2,14 @@ package com.example.v2
 
 import android.app.Activity
 import android.app.DatePickerDialog
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.example.v2.databinding.ActivityAddBinding
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -21,6 +22,7 @@ class AddActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     var month = c.get(Calendar.MONTH)
     var day = c.get(Calendar.DAY_OF_MONTH)
     var category = "Other"
+    var date: LocalDate = LocalDate.now()
     var index = -1
 
     private val array = arrayOf(
@@ -48,12 +50,14 @@ class AddActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
         spinner.onItemSelectedListener  = this
 
+
+        date = LocalDate.now()
         val transfer = intent.getSerializableExtra("transfer") as? Transporter
         if (transfer != null) {
             fillData(transfer)
         }else {
             month += 1
-            binding.textViewDate.text = "${day}/${month}/${year}"
+            binding.textViewDate.text = Shared.formatDate(date)
         }
     }
     private fun fillData(transporter: Transporter){
@@ -64,24 +68,19 @@ class AddActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             if(amount < 0)
                 amount = - amount
             binding.textViewAmount.setText(amount.toString())
-            binding.textViewDate.text = "${date.day}/${date.month}/${date.year + 1900}"
-            day = date.day
-            month = date.month
-            year = date.year
+            binding.textViewDate.text = Shared.formatDate(date)
             binding.textViewTarget.setText(target)
             binding.checkBox.isChecked = incoming
             var position = array.indexOf(category)
-            binding.textViewDebug.text = position.toString()
             binding.spinner.setSelection(position)
         }
     }
 
+
     fun pickDate(view: View) {
         val dpd = DatePickerDialog(this, { _, year, month, day ->
-            this.year = year
-            this.month = month + 1
-            this.day = day
-            binding.textViewDate.text = "${this.day}/${this.month}/${this.year}"
+            date = LocalDate.of(year, month, day)
+            binding.textViewDate.text = Shared.formatDate(date)
 
         }, year, month, day)
 
@@ -98,14 +97,13 @@ class AddActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     fun accept(view: View) {
 
-
         with(binding) {
             try {
                 val amount = textViewAmount.text.toString().toDouble()
                 //co jest XDD?
                 val transfer = Transfer(
                         amount ?: 0.0,
-                         Date(year-1900, month-1, day),textViewTarget.text.toString() ?: "unknown",
+                         date,textViewTarget.text.toString() ?: "unknown",
                         category, checkBox.isChecked
                 )
                 if(index >= 0)

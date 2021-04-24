@@ -1,5 +1,8 @@
 package com.example.v2
 
+import android.accessibilityservice.GestureDescription
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -8,19 +11,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.v2.databinding.ListItemBinding
 
 
-class ViewHolder(private val binding: ListItemBinding):RecyclerView.ViewHolder(binding.root){
-    fun bind(transfer: Transfer){
-        with(binding){
+class ViewHolder(private val binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    fun bind(transfer: Transfer) {
+        with(binding) {
             textViewTarget.text = transfer.target
             textViewValue.text = transfer.amount.toString()
-            if(transfer.amount >=0)
+            if (transfer.amount >= 0)
                 textViewValue.setTextColor(Color.GREEN)
             else
                 textViewValue.setTextColor(Color.RED)
-            textViewDate.text = transfer.date.toString()
+            textViewDate.text = Shared.formatDate(transfer.date)
             textViewCategory.text = transfer.category
             var image = R.drawable.ic_other
-            when(transfer.category){
+            when (transfer.category) {
                 "Education" -> image = R.drawable.ic_education
                 "Food" -> image = R.drawable.ic_food
                 "Fun" -> image = R.drawable.ic_fun
@@ -50,14 +53,35 @@ class CustomAdapter(val mainActivity: MainActivity) : RecyclerView.Adapter<ViewH
             parent,
             false
         )
-        return ViewHolder(binding).also { holder->
-            binding.root.setOnClickListener{onItemClick(binding,parent, holder.layoutPosition)}
+        return ViewHolder(binding).also { holder ->
+            binding.root.setOnClickListener { onItemClick(binding, parent, holder.layoutPosition) }
+            binding.root.setOnLongClickListener { onLongItemClick(parent, holder.layoutPosition) }
         }
 
     }
-    private fun onItemClick(binding: ListItemBinding, parent: ViewGroup,index: Int) {
+
+    private fun onLongItemClick(parent: ViewGroup, index: Int): Boolean {
+        val builder: AlertDialog.Builder = AlertDialog.Builder(parent.context)
+        builder.setCancelable(true)
+        builder.setTitle("Warning")
+        builder.setMessage("Do you want to delete transfer?")
+        builder.setPositiveButton(
+            "DELETE"
+        ) { _, _ ->
+            Shared.transferList.removeAt(index)
+            refresh()
+        }
+        builder.setNegativeButton(android.R.string.cancel
+        ) { _, _ -> }
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+        return true
+    }
+
+
+    private fun onItemClick(binding: ListItemBinding, parent: ViewGroup, index: Int) {
         val intent = Intent(Intent(parent.context, AddActivity::class.java))
-        intent.putExtra("transfer", Transporter(Shared.transferList[index],index))
+        intent.putExtra("transfer", Transporter(Shared.transferList[index], index))
         mainActivity.startAddActivity(intent)
     }
 
@@ -67,7 +91,7 @@ class CustomAdapter(val mainActivity: MainActivity) : RecyclerView.Adapter<ViewH
 
     override fun getItemCount(): Int = Shared.transferList.size
 
-    fun refresh(){
+    fun refresh() {
         notifyDataSetChanged()
     }
 
