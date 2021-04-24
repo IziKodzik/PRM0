@@ -1,12 +1,10 @@
 package com.example.v2
 
+import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.v2.databinding.ActivityMainBinding
 import com.example.v2.databinding.ListItemBinding
 
 
@@ -21,14 +19,29 @@ class ViewHolder(private val binding: ListItemBinding):RecyclerView.ViewHolder(b
                 textViewValue.setTextColor(Color.RED)
             textViewDate.text = transfer.date.toString()
             textViewCategory.text = transfer.category
+            var image = R.drawable.ic_other
+            when(transfer.category){
+                "Education" -> image = R.drawable.ic_education
+                "Food" -> image = R.drawable.ic_food
+                "Fun" -> image = R.drawable.ic_fun
+                "Hobby" -> image = R.drawable.ic_hobby
+                "Investment" -> image = R.drawable.ic_investment
+                "Other" -> image = R.drawable.ic_other
+                "Relationship" -> image = R.drawable.ic_relationship
+                "Work" -> image = R.drawable.ic_work
+            }
+            imageView.setBackgroundResource(image)
 
         }
 
     }
+
+
 }
 
-class CustomAdapter() : RecyclerView.Adapter<ViewHolder>() {
+class CustomAdapter(val mainActivity: MainActivity) : RecyclerView.Adapter<ViewHolder>() {
 
+    var selectedItem = 0
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -37,8 +50,15 @@ class CustomAdapter() : RecyclerView.Adapter<ViewHolder>() {
             parent,
             false
         )
-        return ViewHolder(binding)
+        return ViewHolder(binding).also { holder->
+            binding.root.setOnClickListener{onItemClick(binding,parent, holder.layoutPosition)}
+        }
 
+    }
+    private fun onItemClick(binding: ListItemBinding, parent: ViewGroup,index: Int) {
+        val intent = Intent(Intent(parent.context, AddActivity::class.java))
+        intent.putExtra("transfer", Transporter(Shared.transferList[index],index))
+        mainActivity.startAddActivity(intent)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

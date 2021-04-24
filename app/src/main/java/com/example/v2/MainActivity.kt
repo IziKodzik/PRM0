@@ -1,18 +1,20 @@
 package com.example.v2
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.v2.databinding.ActivityMainBinding
-import java.util.*
-import kotlin.collections.ArrayList
+
+const val REQUEST_ADD_TRANSFER = 1
 
 class MainActivity : AppCompatActivity() {
 
+
     private val binding by lazy {ActivityMainBinding.inflate(layoutInflater)}
-    private val transferAdapter by lazy {CustomAdapter()}
+    private val transferAdapter by lazy {CustomAdapter(this)}
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,14 +34,21 @@ class MainActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(context)
         }
     }
-    override fun onResume(){
-        super.onResume()
-        transferAdapter.refresh()
-    }
-
-
 
     fun openAdd(view: View) {
-        startActivity(Intent(this, AddActivity::class.java))
+        startAddActivity(Intent(this, AddActivity::class.java))
     }
+
+    fun startAddActivity(intent: Intent){
+        startActivityForResult(intent, REQUEST_ADD_TRANSFER)
+    }
+
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if(requestCode == REQUEST_ADD_TRANSFER && resultCode == Activity.RESULT_OK)
+            transferAdapter.refresh()
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
 }
