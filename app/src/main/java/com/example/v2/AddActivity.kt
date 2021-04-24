@@ -15,7 +15,7 @@ import java.util.*
 class AddActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     val binding by lazy { ActivityAddBinding.inflate(layoutInflater) }
-    var adapterView: ArrayAdapter<CharSequence>? = null
+    var adapterView: ArrayAdapter<String>? = null
     val c = Calendar.getInstance()
     var year = c.get(Calendar.YEAR)
     var month = c.get(Calendar.MONTH)
@@ -38,25 +38,23 @@ class AddActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        val transfer = intent.getSerializableExtra("transfer") as? Transporter
+        val spinner = binding.spinner
+        adapterView = ArrayAdapter(
+            this,android.R.layout.simple_spinner_item,array
+        ).also {
+            arrayAdapter ->
+            arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinner.adapter = arrayAdapter
+        }
+        spinner.onItemSelectedListener  = this
 
+        val transfer = intent.getSerializableExtra("transfer") as? Transporter
         if (transfer != null) {
             fillData(transfer)
         }else {
             month += 1
             binding.textViewDate.text = "${day}/${month}/${year}"
         }
-        val spinner = binding.spinner
-        ArrayAdapter.createFromResource(
-            this,
-            R.array.categoires,
-            android.R.layout.simple_spinner_item)
-            .also { adapter->
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                spinner.adapter = adapter
-                this.adapterView = adapter
-            }
-        spinner.onItemSelectedListener  = this
     }
     private fun fillData(transporter: Transporter){
 
@@ -72,8 +70,9 @@ class AddActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             year = date.year
             binding.textViewTarget.setText(target)
             binding.checkBox.isChecked = incoming
-            val position = adapterView?.getPosition(target)
-            binding.spinner.setSelection(3)
+            var position = array.indexOf(category)
+            binding.textViewDebug.text = position.toString()
+            binding.spinner.setSelection(position)
         }
     }
 
