@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.HandlerThread
 import android.util.AttributeSet
 import android.view.View
 import com.example.v2.databinding.ActivityMonthlyBinding
@@ -24,14 +25,19 @@ class MonthlyActivity : AppCompatActivity() {
     }
 
     fun showGraph(view: View) {
-
-        Shared.month = binding.editTextYear.text.toString().toInt()
-        Shared.year = binding.editTextYear.text.toString().toInt()
-        binding.view.invalidate()
-
+        refreshGraph()
     }
-    suspend fun refreshGraph() = withContext(){
 
+    fun refreshGraph() {
+        val thread = HandlerThread("th").also {
+
+            it.run {
+                Shared.month = binding.editTextMonth.text.toString().toInt()
+                Shared.year = binding.editTextYear.text.toString().toInt()
+                binding.view.invalidate()
+            }
+            it.start()
+        }
 
     }
 }
