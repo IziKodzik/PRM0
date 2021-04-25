@@ -8,5 +8,7 @@ object Shared {
     val transferList = mutableListOf<Transfer>()
     fun formatDate(date: LocalDate): String =
         date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+    var month = -1
+    var year = -1
 
 }

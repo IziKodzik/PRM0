@@ -2,11 +2,12 @@ package com.example.v2
 
 import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.v2.databinding.ActivityMainBinding
+
 
 const val REQUEST_ADD_TRANSFER = 1
 
@@ -15,7 +16,7 @@ class MainActivity : AppCompatActivity() {
 
     private val binding by lazy {ActivityMainBinding.inflate(layoutInflater)}
     private val transferAdapter by lazy {CustomAdapter(this)}
-
+    private val manager = supportFragmentManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,5 +51,10 @@ class MainActivity : AppCompatActivity() {
             transferAdapter.refresh()
         super.onActivityResult(requestCode, resultCode, data)
     }
+
+    fun showMonthly(view: View) {
+        startActivity(Intent(this, MonthlyActivity::class.java))
+    }
+
 
 }

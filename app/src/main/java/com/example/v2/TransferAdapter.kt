@@ -67,13 +67,15 @@ class CustomAdapter(val mainActivity: MainActivity) : RecyclerView.Adapter<ViewH
         builder.setMessage("Do you want to delete transfer?")
         builder.setPositiveButton(
             "DELETE"
-        ) { _, _ ->
+        ) { i, w ->
             Shared.transferList.removeAt(index)
+
             refresh()
         }
         builder.setNegativeButton(android.R.string.cancel
         ) { _, _ -> }
         val dialog: AlertDialog = builder.create()
+        dialog.setOnShowListener{dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED)}
         dialog.show()
         return true
     }
