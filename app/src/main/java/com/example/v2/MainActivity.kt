@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.v2.databinding.ActivityMainBinding
 import java.time.LocalDate
+import kotlin.random.Random
 
 
 const val REQUEST_ADD_TRANSFER = 1
@@ -17,7 +18,6 @@ class MainActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val transferAdapter by lazy { CustomAdapter(this) }
-    private val manager = supportFragmentManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,48 +25,17 @@ class MainActivity : AppCompatActivity() {
         setupRecycler()
     }
 
-
     private fun setupRecycler() {
-
 
         for (i in 1..31) {
             Shared.transferList.add(
                 Transfer(
-                    1.0, LocalDate.of(2021, 3, i),
-                    "Other", "Other", true
+                    Random.nextDouble(3.5, 385.3), LocalDate.of(2021, 3, i),
+                    "Other", "Other", Random.nextBoolean()
                 )
             )
         }
-        Shared.transferList.add(
-            Transfer(
-                1.0, LocalDate.of(2021, 3, 3),
-                "Other", "Fun", false
-            )
-        )
-        Shared.transferList.add(
-            Transfer(
-                1.0, LocalDate.of(2021, 3, 3),
-                "Other", "Fun", false
-            )
-        )
-        Shared.transferList.add(
-            Transfer(
-                1.0, LocalDate.of(2021, 3, 3),
-                "Other", "Fun", false
-            )
-        )
-        Shared.transferList.add(
-            Transfer(
-                1.0, LocalDate.of(2021, 3, 4),
-                "Other", "Fun", false
-            )
-        )
-        Shared.transferList.add(
-            Transfer(
-                1.0, LocalDate.of(2021, 3, 4),
-                "Other", "Fun", false
-            )
-        )
+
 
         val recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(this)

@@ -13,4 +13,10 @@ data class Transfer(
         if(target.isBlank())
             target="Target unknown"
     }
+
+    override fun toString(): String {
+        return "Transfer(amount=${amount}" +
+                ", date=$date, target='$target', category='$category', incoming=$incoming)"
+    }
+
 }

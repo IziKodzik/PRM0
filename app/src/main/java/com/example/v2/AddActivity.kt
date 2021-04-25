@@ -9,7 +9,6 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.example.v2.databinding.ActivityAddBinding
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 

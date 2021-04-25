@@ -9,13 +9,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.v2.databinding.ListItemBinding
+import java.text.DecimalFormat
 
 
 class ViewHolder(private val binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root) {
     fun bind(transfer: Transfer) {
         with(binding) {
             textViewTarget.text = transfer.target
-            textViewValue.text = transfer.amount.toString()
+            textViewValue.text = Shared.formatNumber(transfer.amount)
             if (transfer.amount >= 0)
                 textViewValue.setTextColor(Color.GREEN)
             else
