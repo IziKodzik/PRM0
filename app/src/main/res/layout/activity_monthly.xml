@@ -26,7 +26,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:ems="10"
-        android:hint="Month number"
+        android:hint="Month nr"
         android:inputType="number"
         app:layout_constraintEnd_toStartOf="@+id/editTextYear"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,7 +50,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:onClick="showGraph"
-        android:text="Show graph"
+        android:text="SHOW GRAPH"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

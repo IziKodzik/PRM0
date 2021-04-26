@@ -70,13 +70,13 @@ class AddActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             binding.textViewDate.text = Shared.formatDate(date)
             binding.textViewTarget.setText(target)
             binding.checkBox.isChecked = incoming
-            var position = array.indexOf(category)
+            val position = array.indexOf(category)
             binding.spinner.setSelection(position)
         }
     }
 
 
-    fun pickDate(view: View) {
+    fun pickDate() {
         val dpd = DatePickerDialog(this, { _, year, month, day ->
             date = LocalDate.of(year, month, day)
             binding.textViewDate.text = Shared.formatDate(date)

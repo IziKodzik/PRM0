@@ -30,12 +30,12 @@ class CanvasView @JvmOverloads constructor(
     @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas?) {
 
-        if (Shared.month < 0 && Shared.year < 0)
+        if (Shared.graphDate.monthValue < 0 && Shared.graphDate.year < 0)
             return
 
-        val date = LocalDate.of(Shared.year, Shared.month, 1)
+        val date = LocalDate.of(Shared.graphDate.year, Shared.graphDate.month, 1)
         var days = date.month.maxLength()
-        if (date.monthValue == 2 && Shared.year % 4 != 0)
+        if (date.monthValue == 2 && Shared.graphDate.year % 4 != 0)
             days--
 
         val paint = Paint()
@@ -57,28 +57,30 @@ class CanvasView @JvmOverloads constructor(
         }
 
         val daysBalance = DoubleArray(days) { 0.0 }
-        val list =
-            Shared.transferList.filter { it.date.month == date.month && it.date.year == date.year }
-                .also { list ->
-                    list.forEach {
-                        daysBalance[it.date.dayOfMonth - 1] += it.amount
-                    }
-                }
+        Shared.transferList.filter { it.date.month == date.month && it.date.year == date.year }
+            .onEach {
+                daysBalance[it.date.dayOfMonth - 1] += it.amount
+            }
 
         paint.color = Color.RED
         var current = 0.0
-        var minValue = Double.MAX_VALUE
-        var maxValue = Double.MIN_VALUE
+        var tmpMaxValue: Double? = null
+        var tmpMinValue: Double? = null
         var x = 80f
         var y = h - 60
         daysBalance.forEach {
             current += it
-            if (current > maxValue)
-                maxValue = current
-            if (current < minValue)
-                minValue = current
+            if (tmpMaxValue == null || current > tmpMaxValue?: Double.MIN_VALUE)
+                tmpMaxValue = current
+            if (tmpMinValue == null || current < tmpMinValue?: Double.MAX_VALUE)
+                tmpMinValue = current
         }
+        var minValue:Double = tmpMinValue!!
+        var maxValue:Double = tmpMaxValue!!
+        if(maxValue == 0.0 && minValue == 0.0)
+            maxValue = 0.00000000001
         paint.color = Color.DKGRAY
+
         if (minValue <= 0 && maxValue >= 0) {
             paint.strokeWidth = 4f
             val zeroPoint = ((-minValue) / (-minValue + maxValue)).toFloat() * (w - 100)
@@ -91,9 +93,8 @@ class CanvasView @JvmOverloads constructor(
         } else if (abs(minValue) < 100000) {
             minX = 25f
         }
-        var maxX = 0f
 
-        maxX = when {
+        val maxX: Float = when {
             abs(maxValue) < 100 -> {
                 95f
             }
@@ -111,15 +112,16 @@ class CanvasView @JvmOverloads constructor(
         canvas?.drawText(Shared.formatNumber(maxValue), w - maxX, y + 45, paint)
 
         current = 0.0
+        paint.strokeWidth = 7f
         daysBalance.forEachIndexed { index, value ->
             val tmpCurrent = current
             current += value
             when {
                 current < 0 -> paint.color = Color.RED
-                current > 0 -> paint.color = Color.GREEN
+                current > 0 -> paint.color = Color.parseColor("#0dbf49")
                 else -> paint.color = Color.BLACK
             }
-            if(index != 0) {
+            if (index != 0) {
                 canvas?.drawLine(
                     x + ((tmpCurrent + (-minValue)) / (-minValue + maxValue)).toFloat() * (w - 100),
                     y + step,
@@ -128,7 +130,6 @@ class CanvasView @JvmOverloads constructor(
                     paint
                 )
             }
-
             canvas?.drawCircle(
                 x + ((current + (-minValue)) / (-minValue + maxValue)).toFloat() * (w - 100),
                 y, 10f, paint

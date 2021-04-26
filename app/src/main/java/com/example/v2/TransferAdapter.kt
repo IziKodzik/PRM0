@@ -1,15 +1,12 @@
 package com.example.v2
 
-import android.accessibilityservice.GestureDescription
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.v2.databinding.ListItemBinding
-import java.text.DecimalFormat
 
 
 class ViewHolder(private val binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -18,7 +15,7 @@ class ViewHolder(private val binding: ListItemBinding) : RecyclerView.ViewHolder
             textViewTarget.text = transfer.target
             textViewValue.text = Shared.formatNumber(transfer.amount)
             if (transfer.amount >= 0)
-                textViewValue.setTextColor(Color.GREEN)
+                textViewValue.setTextColor(Color.parseColor("#0dbf49"))
             else
                 textViewValue.setTextColor(Color.RED)
             textViewDate.text = Shared.formatDate(transfer.date)
@@ -43,10 +40,7 @@ class ViewHolder(private val binding: ListItemBinding) : RecyclerView.ViewHolder
 
 }
 
-class CustomAdapter(val mainActivity: MainActivity) : RecyclerView.Adapter<ViewHolder>() {
-
-    var selectedItem = 0
-
+class CustomAdapter(private val mainActivity: MainActivity) : RecyclerView.Adapter<ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ListItemBinding.inflate(
@@ -55,7 +49,7 @@ class CustomAdapter(val mainActivity: MainActivity) : RecyclerView.Adapter<ViewH
             false
         )
         return ViewHolder(binding).also { holder ->
-            binding.root.setOnClickListener { onItemClick(binding, parent, holder.layoutPosition) }
+            binding.root.setOnClickListener { onItemClick(parent, holder.layoutPosition) }
             binding.root.setOnLongClickListener { onLongItemClick(parent, holder.layoutPosition) }
         }
 
@@ -70,7 +64,7 @@ class CustomAdapter(val mainActivity: MainActivity) : RecyclerView.Adapter<ViewH
             "DELETE"
         ) { i, w ->
             Shared.transferList.removeAt(index)
-
+            mainActivity.refreshBalance()
             refresh()
         }
         builder.setNegativeButton(android.R.string.cancel
@@ -81,8 +75,7 @@ class CustomAdapter(val mainActivity: MainActivity) : RecyclerView.Adapter<ViewH
         return true
     }
 
-
-    private fun onItemClick(binding: ListItemBinding, parent: ViewGroup, index: Int) {
+    private fun onItemClick(parent: ViewGroup, index: Int) {
         val intent = Intent(Intent(parent.context, AddActivity::class.java))
         intent.putExtra("transfer", Transporter(Shared.transferList[index], index))
         mainActivity.startAddActivity(intent)

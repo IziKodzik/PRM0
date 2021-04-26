@@ -10,17 +10,21 @@ import android.os.Bundle
 import android.os.HandlerThread
 import android.util.AttributeSet
 import android.view.View
+import android.widget.EditText
 import com.example.v2.databinding.ActivityMonthlyBinding
+import java.lang.NumberFormatException
+import java.time.DateTimeException
+import java.time.LocalDate
 
 class MonthlyActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityMonthlyBinding.inflate(layoutInflater) }
-    var isFragmentOneLoaded = true;
-    val manager = supportFragmentManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        binding.editTextMonth.setText(Shared.graphDate.monthValue.toString())
+        binding.editTextYear.setText(Shared.graphDate.year.toString())
 
     }
 
@@ -28,13 +32,27 @@ class MonthlyActivity : AppCompatActivity() {
         refreshGraph()
     }
 
-    fun refreshGraph() {
-        val thread = HandlerThread("th").also {
+    private fun refreshGraph() {
+       HandlerThread("th").also {
 
             it.run {
-                Shared.month = binding.editTextMonth.text.toString().toInt()
-                Shared.year = binding.editTextYear.text.toString().toInt()
-                binding.view.invalidate()
+                try {
+                    binding.editTextYear.setTextColor(Color.BLACK)
+                    binding.editTextMonth.setTextColor(Color.BLACK)
+                    val month = binding.editTextMonth.text.toString().toInt()
+                    val year = binding.editTextYear.text.toString().toInt()
+                    Shared.graphDate = LocalDate.of(year,month,1)
+                    binding.view.invalidate()
+
+                }catch (e: NumberFormatException){
+                    binding.editTextYear.setTextColor(Color.RED)
+                    binding.editTextMonth.setTextColor(Color.RED)
+                    return
+                }catch (e: DateTimeException){
+                    binding.editTextYear.setTextColor(Color.RED)
+                    binding.editTextMonth.setTextColor(Color.RED)
+                    return
+                }
             }
             it.start()
         }

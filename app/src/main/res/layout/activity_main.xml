@@ -47,11 +47,32 @@
         android:id="@+id/monthlyStatementButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="30dp"
-        android:text="monthly statement "
+        android:layout_marginEnd="12dp"
+        android:background="@android:drawable/screen_background_light_transparent"
+        android:drawableLeft="@drawable/ic_baseline_auto_graph_24"
+        android:onClick="showMonthly"
+        android:text="balances"
         app:layout_constraintBottom_toBottomOf="@+id/add_button"
         app:layout_constraintEnd_toStartOf="@+id/add_button"
-        app:layout_constraintTop_toTopOf="@+id/add_button"
-        android:onClick="showMonthly"/>
+        app:layout_constraintTop_toTopOf="@+id/add_button" />
+
+    <TextView
+        android:id="@+id/textViewCurrent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Balance"
+        android:textSize="18dp"
+        app:layout_constraintStart_toStartOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="5dp"
+        android:text="Monthly balance"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recycler_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
