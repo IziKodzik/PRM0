@@ -40,7 +40,7 @@ class CanvasView @JvmOverloads constructor(
         val systemBeginX = 75f
         val systemBeginY = h - 60
         val systemEndX = w - 60
-        val systemEndY = 150f
+        val systemEndY = 50f
 
         val paint = Paint()
         paint.strokeWidth = 10f
@@ -86,7 +86,7 @@ class CanvasView @JvmOverloads constructor(
         if (minValue <= 0 && maxValue >= 0) {
             paint.strokeWidth = 4f
             val zeroPoint = normalize(0.0,minValue,maxValue).toFloat() * (systemEndX - systemBeginX)
-            canvas?.drawLine(systemBeginX + zeroPoint, systemEndY - 30, systemBeginX + zeroPoint, systemBeginY + 15, paint)
+            canvas?.drawLine(systemBeginX + zeroPoint + 5, systemBeginY, systemBeginX + zeroPoint + 5, systemEndY  + 10, paint)
         }
         var minX = 0f
         if (abs(minValue) < 1000) {
