@@ -1,17 +1,15 @@
-package com.example.v2
+package com.example.v2.shared
 
+import com.example.v2.model.Transfer
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
-import java.time.temporal.TemporalUnit
 
 object Shared {
 
     var graphDate: LocalDate =  LocalDate.now().minus(1,ChronoUnit.MONTHS)
-
-    
 
     val transferList = mutableListOf<Transfer>()
     fun formatDate(date: LocalDate): String =

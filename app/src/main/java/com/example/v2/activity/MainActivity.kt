@@ -1,4 +1,4 @@
-package com.example.v2
+package com.example.v2.activity
 
 import android.app.Activity
 import android.content.Intent
@@ -7,7 +7,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.v2.shared.Shared
 import com.example.v2.databinding.ActivityMainBinding
+import com.example.v2.model.Transfer
+import com.example.v2.recycler.TransferAdapter
 import java.time.LocalDate
 import kotlin.random.Random
 
@@ -18,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-    private val transferAdapter by lazy { CustomAdapter(this) }
+    private val transferAdapter by lazy { TransferAdapter(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

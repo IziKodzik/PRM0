@@ -1,16 +1,11 @@
-package com.example.v2
+package com.example.v2.activity
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Paint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.HandlerThread
-import android.util.AttributeSet
 import android.view.View
-import android.widget.EditText
+import com.example.v2.shared.Shared
 import com.example.v2.databinding.ActivityMonthlyBinding
 import java.lang.NumberFormatException
 import java.time.DateTimeException

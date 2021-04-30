@@ -1,4 +1,4 @@
-package com.example.v2
+package com.example.v2.activity
 
 import android.app.Activity
 import android.app.DatePickerDialog
@@ -7,14 +7,17 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import com.example.v2.shared.Shared
 import com.example.v2.databinding.ActivityAddBinding
+import com.example.v2.model.Transfer
+import com.example.v2.model.Transporter
 import java.time.LocalDate
 import java.util.*
 
 
 class AddActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
-    val binding by lazy { ActivityAddBinding.inflate(layoutInflater) }
+    private val binding by lazy { ActivityAddBinding.inflate(layoutInflater) }
     var adapterView: ArrayAdapter<String>? = null
     val c = Calendar.getInstance()
     var year = c.get(Calendar.YEAR)
@@ -25,14 +28,14 @@ class AddActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     var index = -1
 
     private val array = arrayOf(
-        "Other",
-        "Fun",
-        "Food",
-        "Education",
-        "Hobby",
-        "Relationship",
-        "Investment",
-        "Work"
+            "Other",
+            "Fun",
+            "Food",
+            "Education",
+            "Hobby",
+            "Relationship",
+            "Investment",
+            "Work"
         )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,8 +78,7 @@ class AddActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
     }
 
-
-    fun pickDate() {
+    fun pickDate(view :View) {
         val dpd = DatePickerDialog(this, { _, year, month, day ->
             date = LocalDate.of(year, month, day)
             binding.textViewDate.text = Shared.formatDate(date)

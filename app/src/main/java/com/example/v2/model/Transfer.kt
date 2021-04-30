@@ -1,4 +1,4 @@
-package com.example.v2
+package com.example.v2.model
 
 import java.io.Serializable
 import java.time.LocalDate

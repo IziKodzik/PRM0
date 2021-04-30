@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MonthlyActivity">
+    tools:context=".activity.MonthlyActivity">
 
-    <com.example.v2.CanvasView
+    <com.example.v2.view.CanvasView
         android:id="@+id/view"
         android:layout_width="0dp"
         android:layout_height="0dp"

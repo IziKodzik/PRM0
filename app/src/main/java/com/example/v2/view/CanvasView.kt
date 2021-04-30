@@ -1,4 +1,4 @@
-package com.example.v2
+package com.example.v2.view
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -6,12 +6,10 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
+import com.example.v2.shared.Shared
 import java.time.LocalDate
-import java.util.*
 import kotlin.math.abs
-import kotlin.math.absoluteValue
 
 class CanvasView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -123,21 +121,26 @@ class CanvasView @JvmOverloads constructor(
             }
             if (index != 0) {
                 canvas?.drawLine(
-                    x + ((tmpCurrent + (-minValue)) / (-minValue + maxValue)).toFloat() * (w - 100),
+                    x + normalize(tmpCurrent, minValue, maxValue).toFloat() * (w - 100),
                     y + step,
-                    x + ((current + (-minValue)) / (-minValue + maxValue)).toFloat() * (w - 100),
+                    x + normalize(current, minValue, maxValue).toFloat() * (w - 100),
                     y,
                     paint
                 )
             }
             canvas?.drawCircle(
-                x + ((current + (-minValue)) / (-minValue + maxValue)).toFloat() * (w - 100),
+                x + normalize(current, minValue, maxValue).toFloat() * (w - 100),
                 y, 10f, paint
             )
             y -= step
 
         }
 
-
     }
+
+    private fun normalize(
+        tmpCurrent: Double,
+        minValue: Double,
+        maxValue: Double
+    ) = ((tmpCurrent + (-minValue)) / (-minValue + maxValue))
 }
