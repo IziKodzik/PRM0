@@ -45,8 +45,8 @@ class CanvasView @JvmOverloads constructor(
         val paint = Paint()
         paint.strokeWidth = 10f
 
-        canvas?.drawLine(systemBeginX, systemBeginY, systemEndX, systemBeginY, paint)
-        canvas?.drawLine(systemBeginX + 5, systemBeginY, systemBeginX + 5,
+        canvas?.drawLine(systemBeginX, systemBeginY, systemEndX + 30, systemBeginY, paint) //horizontal
+        canvas?.drawLine(systemBeginX + 5, systemBeginY, systemBeginX + 5,//vertical
             systemEndY - 30, paint)
 
         paint.strokeWidth = 1f
@@ -60,24 +60,15 @@ class CanvasView @JvmOverloads constructor(
                 paint)
         }
 
-        var step = (h - 35)
-        step /= daysCount
-
-        var i = h - 46
-        var j = 1
-
         val daysBalance = DoubleArray(daysCount) { 0.0 }
         Shared.transferList.filter { it.date.month == date.month && it.date.year == date.year }
             .onEach {
                 daysBalance[it.date.dayOfMonth - 1] += it.amount
             }
 
-        paint.color = Color.RED
         var current = 0.0
         var tmpMaxValue: Double? = null
         var tmpMinValue: Double? = null
-        var x = 80f
-        var y = h - 60
         daysBalance.forEach {
             current += it
             if (tmpMaxValue == null || current > tmpMaxValue?: Double.MIN_VALUE)
@@ -85,18 +76,18 @@ class CanvasView @JvmOverloads constructor(
             if (tmpMinValue == null || current < tmpMinValue?: Double.MAX_VALUE)
                 tmpMinValue = current
         }
-        var minValue:Double = tmpMinValue!!
+        val minValue:Double = tmpMinValue!!
         var maxValue:Double = tmpMaxValue!!
         if(maxValue == 0.0 && minValue == 0.0)
             maxValue = 0.00000000001
-        paint.color = Color.DKGRAY
 
+
+        paint.color = Color.GRAY
         if (minValue <= 0 && maxValue >= 0) {
             paint.strokeWidth = 4f
-            val zeroPoint = ((-minValue) / (-minValue + maxValue)).toFloat() * (w - 100)
-            canvas?.drawLine(x + zeroPoint, 0f, x + zeroPoint, h - 60, paint)
+            val zeroPoint = normalize(0.0,minValue,maxValue).toFloat() * (systemEndX - systemBeginX)
+            canvas?.drawLine(systemBeginX + zeroPoint, systemEndY - 30, systemBeginX + zeroPoint, systemBeginY + 15, paint)
         }
-
         var minX = 0f
         if (abs(minValue) < 1000) {
             minX = 45f
@@ -118,8 +109,8 @@ class CanvasView @JvmOverloads constructor(
                 160f
             }
         }
-        canvas?.drawText(Shared.formatNumber(minValue), minX, y + 45, paint)
-        canvas?.drawText(Shared.formatNumber(maxValue), w - maxX, y + 45, paint)
+        canvas?.drawText(Shared.formatNumber(minValue), minX, systemBeginY + 60, paint)
+        canvas?.drawText(Shared.formatNumber(maxValue), w - maxX, systemBeginY + 60, paint)
 
         current = 0.0
         paint.strokeWidth = 7f
@@ -131,21 +122,21 @@ class CanvasView @JvmOverloads constructor(
                 current > 0 -> paint.color = Color.parseColor("#0dbf49")
                 else -> paint.color = Color.BLACK
             }
-            if (index != 0) {
+            if(index != 0){
                 canvas?.drawLine(
-                    x + normalize(tmpCurrent, minValue, maxValue).toFloat() * (w - 100),
-                    y + step,
-                    x + normalize(current, minValue, maxValue).toFloat() * (w - 100),
-                    y,
+                    systemBeginX + 5 + normalize(tmpCurrent, minValue, maxValue).toFloat() * (systemEndX-systemBeginX),
+                    systemBeginY + (1-normalize(index.toDouble(),1.0, daysCount.toDouble()).toFloat()
+                            * (systemBeginY - systemEndY)) ,
+                    systemBeginX + 5 + normalize(current, minValue, maxValue).toFloat() * (systemEndX-systemBeginX),
+                    systemBeginY + (1-normalize(index.toDouble() + 1,1.0, daysCount.toDouble()).toFloat() * (systemBeginY - systemEndY)) ,
                     paint
                 )
             }
             canvas?.drawCircle(
-                x + normalize(current, minValue, maxValue).toFloat() * (w - 100),
-                y, 10f, paint
+                systemBeginX + 5 + normalize(current, minValue, maxValue).toFloat() * (systemEndX-systemBeginX),
+                systemBeginY + (1-normalize(index.toDouble() + 1,1.0, daysCount.toDouble()).toFloat() * (systemBeginY - systemEndY)) ,
+                10f, paint
             )
-            y -= step
-
         }
 
     }
