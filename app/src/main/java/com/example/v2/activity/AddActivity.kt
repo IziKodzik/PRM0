@@ -58,7 +58,6 @@ class AddActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         if (transfer != null) {
             fillData(transfer)
         }else {
-            month += 1
             binding.textViewDate.text = Shared.formatDate(date)
         }
     }
@@ -80,7 +79,7 @@ class AddActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     fun pickDate(view :View) {
         val dpd = DatePickerDialog(this, { _, year, month, day ->
-            date = LocalDate.of(year, month, day)
+            date = LocalDate.of(year, month + 1, day)
             binding.textViewDate.text = Shared.formatDate(date)
 
         }, year, month, day)
