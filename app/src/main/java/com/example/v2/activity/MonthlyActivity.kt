@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.HandlerThread
 import android.view.View
-import com.example.v2.shared.Shared
 import com.example.v2.databinding.ActivityMonthlyBinding
 import java.lang.NumberFormatException
 import java.time.DateTimeException
@@ -18,8 +17,9 @@ class MonthlyActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        binding.editTextMonth.setText(Shared.graphDate.monthValue.toString())
-        binding.editTextYear.setText(Shared.graphDate.year.toString())
+        var now = LocalDate.now()
+        binding.editTextMonth.setText(now.monthValue.toString())
+        binding.editTextYear.setText(now.year.toString())
 
     }
 
@@ -36,7 +36,7 @@ class MonthlyActivity : AppCompatActivity() {
                     binding.editTextMonth.setTextColor(Color.BLACK)
                     val month = binding.editTextMonth.text.toString().toInt()
                     val year = binding.editTextYear.text.toString().toInt()
-                    Shared.graphDate = LocalDate.of(year,month,1)
+                    binding.view.graphDate = LocalDate.of(year,month,1)
                     binding.view.invalidate()
 
                 }catch (e: NumberFormatException){

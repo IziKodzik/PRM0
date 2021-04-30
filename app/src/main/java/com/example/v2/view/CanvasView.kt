@@ -17,6 +17,7 @@ class CanvasView @JvmOverloads constructor(
 
     private var w = 0f
     private var h = 0f
+    var graphDate: LocalDate = LocalDate.now()
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
@@ -28,12 +29,12 @@ class CanvasView @JvmOverloads constructor(
     @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas?) {
 
-        if (Shared.graphDate.monthValue < 0 && Shared.graphDate.year < 0)
+        if (graphDate.monthValue < 0 && graphDate.year < 0)
             return
 
-        val date = LocalDate.of(Shared.graphDate.year, Shared.graphDate.month, 1)
+        val date = LocalDate.of(graphDate.year, graphDate.month, 1)
         var days = date.month.maxLength()
-        if (date.monthValue == 2 && Shared.graphDate.year % 4 != 0)
+        if (date.monthValue == 2 && graphDate.year % 4 != 0)
             days--
 
         val paint = Paint()

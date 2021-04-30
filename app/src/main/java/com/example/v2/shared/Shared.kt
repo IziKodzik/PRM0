@@ -9,8 +9,6 @@ import java.time.temporal.ChronoUnit
 
 object Shared {
 
-    var graphDate: LocalDate =  LocalDate.now().minus(1,ChronoUnit.MONTHS)
-
     val transferList = mutableListOf<Transfer>()
     fun formatDate(date: LocalDate): String =
         date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
