@@ -33,29 +33,40 @@ class CanvasView @JvmOverloads constructor(
             return
 
         val date = LocalDate.of(graphDate.year, graphDate.month, 1)
-        var days = date.month.maxLength()
+        var daysCount = date.month.maxLength()
         if (date.monthValue == 2 && graphDate.year % 4 != 0)
-            days--
+            daysCount--
+
+        val systemBeginX = 75f
+        val systemBeginY = h - 60
+        val systemEndX = w - 60
+        val systemEndY = 150f
 
         val paint = Paint()
         paint.strokeWidth = 10f
 
-        canvas?.drawLine(75f, h - 60, w, h - 60, paint)
-        canvas?.drawLine(80f, 0f, 80f, h - 60, paint)
+        canvas?.drawLine(systemBeginX, systemBeginY, systemEndX, systemBeginY, paint)
+        canvas?.drawLine(systemBeginX + 5, systemBeginY, systemBeginX + 5,
+            systemEndY - 30, paint)
+
         paint.strokeWidth = 1f
         paint.textSize = 30f
+
+        for (i in daysCount downTo 1){
+            canvas?.drawText(i.toString(), systemBeginX - 50f,
+                systemBeginY + 10 -
+                        ((normalize(i.toDouble(), 1.0,daysCount.toDouble())).toFloat()
+                                * (systemBeginY-systemEndY)),
+                paint)
+        }
+
         var step = (h - 35)
-        step /= days
+        step /= daysCount
 
         var i = h - 46
         var j = 1
-        while (i >= 0) {
-            canvas?.drawText(j.toString(), 10f, i, paint)
-            i -= step
-            j++
-        }
 
-        val daysBalance = DoubleArray(days) { 0.0 }
+        val daysBalance = DoubleArray(daysCount) { 0.0 }
         Shared.transferList.filter { it.date.month == date.month && it.date.year == date.year }
             .onEach {
                 daysBalance[it.date.dayOfMonth - 1] += it.amount
